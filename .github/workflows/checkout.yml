@@ -33,6 +33,7 @@ jobs:
           go get -u github.com/golang/protobuf/protoc-gen-go
           go get -u github.com/golang/mock/mockgen
           go get -u golang.org/x/tools/cmd/goimports
+          ls -lha $GOPATH/bin
       - name: Generate stubs
         run: |
           echo "Hello"
