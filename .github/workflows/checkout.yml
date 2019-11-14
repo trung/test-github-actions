@@ -29,16 +29,21 @@ jobs:
           curl -q -L https://github.com/protocolbuffers/protobuf/releases/download/v3.9.1/protoc-3.9.1-linux-x86_64.zip -o protoc.zip && unzip -q protoc.zip
           ./bin/protoc --version
           export GOPATH=$(pwd)
-          go get -v github.com/golang/protobuf/protoc-gen-go
-          go get -u github.com/golang/mock/mockgen
-          go get -u golang.org/x/tools/cmd/goimports
+          go get github.com/golang/protobuf/protoc-gen-go
+          go get github.com/golang/mock/mockgen
+          go get golang.org/x/tools/cmd/goimports
           ls -lha ./bin
-      - name: Generate stubs
+      - name: Generate code
         run: |
-          export PATH=$PATH:../tools/bin/
-          mkdir -p grpc
-          protoc -I ../grpc -I ../grpc/vendor --go_out=plugins=grpc:grpc ../grpc/init.proto ../grpc/helloworld.proto ../grpc/security.proto
+          export PATH=$PATH:../tools/bin/ && mkdir -p grpc/proto && mkdir -p grpc/mock_proto
+          protoc -I ../grpc -I ../grpc/vendor --go_out=plugins=grpc:grpc/proto ../grpc/init.proto ../grpc/helloworld.proto ../grpc/security.proto
+          mockgen -package mock_proto -destination grpc/mock_proto/mock_initializer.go -source grpc/init.pb.go
+          mockgen -package mock_proto -destination grpc/mock_proto/mock_helloworld.go  -source grpc/helloworld.pb.go
+          mockgen -package mock_proto -destination grpc/mock_proto/mock_security.go    -source grpc/security.pb.go
+          git add -A
           git status
-      - name: Generate mocks
+      - name: Commit changes
         run: |
-          echo "Hello"
+          git config --local user.name "Trung Nguyen"
+          git config --local user.email "24930+trung@users.noreply.github.com"
+          git commit -am "Auto update"
