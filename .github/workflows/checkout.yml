@@ -27,7 +27,8 @@ jobs:
         run: |
           mkdir -p ../tools
           cd ../tools
-          curl https://github.com/protocolbuffers/protobuf/releases/download/v3.9.1/protoc-3.9.1-linux-x86_64.zip -o protoc.zip && unzip protoc.zip
+          curl -L https://github.com/protocolbuffers/protobuf/releases/download/v3.9.1/protoc-3.9.1-linux-x86_64.zip -o protoc.zip
+          unzip protoc.zip
           ./protoc --version
           go get -u github.com/golang/protobuf/protoc-gen-go
           go get -u github.com/golang/mock/mockgen
