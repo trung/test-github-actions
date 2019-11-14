@@ -1,0 +1,37 @@
+# $GITHUB_WORKSPACE/src -> this project files
+# $GITHUB_WORKSPACE/grpc -> proto files
+# $GITHUB_WORKSPACE/tools -> tools for code generation
+name: Update Source Code
+on: [push]
+jobs:
+  build:
+    name: Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+      - name: Check out project files
+        uses: actions/checkout@v1
+        with:
+          path: src
+      - name: Check out proto files
+        uses: actions/checkout@v1
+        with:
+          repository: QuorumEngineering/quorum-plugin-definitions
+          ref: refs/heads/simple
+          token: ${{ secrets.QUORUMBOT_PAT }}
+          path: grpc
+      - name: Install tools
+        run: |
+          mkdir -p tools
+          cd tools
+          curl https://github.com/protocolbuffers/protobuf/releases/download/v3.9.1/protoc-3.9.1-linux-x86_64.zip -o protoc.zip
+
+      - name: Generate stubs
+        run: |
+          echo "Hello"
+      - name: Generate mocks
+        run: |
+          echo "Hello"
