@@ -31,9 +31,11 @@ jobs:
           unzip protoc.zip
           ./bin/protoc --version
           go get -u github.com/golang/protobuf/protoc-gen-go
+          which protoc-gen-go
           go get -u github.com/golang/mock/mockgen
+          which mockgen
           go get -u golang.org/x/tools/cmd/goimports
-          ls -lha $GOPATH/bin
+          which goimports
       - name: Generate stubs
         run: |
           echo "Hello"
