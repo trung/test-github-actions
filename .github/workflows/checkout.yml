@@ -35,9 +35,10 @@ jobs:
           ls -lha ./bin
       - name: Generate stubs
         run: |
-          pwd
+          export PATH=$PATH:../tools/bin/
           mkdir -p grpc
-          ../tools/bin/protoc -I ../grpc -I ../grpc/vendor --go_out=plugins=grpc:grpc ../grpc/init.proto ../grpc/helloworld.proto ../grpc/security.proto
+          protoc -I ../grpc -I ../grpc/vendor --go_out=plugins=grpc:grpc ../grpc/init.proto ../grpc/helloworld.proto ../grpc/security.proto
+          git status
       - name: Generate mocks
         run: |
           echo "Hello"
