@@ -37,9 +37,9 @@ jobs:
         run: |
           export PATH=$PATH:../tools/bin/ && mkdir -p grpc/proto && mkdir -p grpc/mock_proto
           protoc -I ../grpc -I ../grpc/vendor --go_out=plugins=grpc:grpc/proto ../grpc/init.proto ../grpc/helloworld.proto ../grpc/security.proto
-          mockgen -package mock_proto -destination grpc/mock_proto/mock_initializer.go -source grpc/init.pb.go
-          mockgen -package mock_proto -destination grpc/mock_proto/mock_helloworld.go  -source grpc/helloworld.pb.go
-          mockgen -package mock_proto -destination grpc/mock_proto/mock_security.go    -source grpc/security.pb.go
+          mockgen -package mock_proto -destination grpc/mock_proto/mock_initializer.go -source grpc/proto/init.pb.go
+          mockgen -package mock_proto -destination grpc/mock_proto/mock_helloworld.go  -source grpc/proto/helloworld.pb.go
+          mockgen -package mock_proto -destination grpc/mock_proto/mock_security.go    -source grpc/proto/security.pb.go
           git add -A
           git status
       - name: Commit changes
