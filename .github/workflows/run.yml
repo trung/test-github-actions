@@ -48,13 +48,12 @@ jobs:
         env:
           GOPATH: ${{ env.TOOLS_DIR }}
         run: |
-          curl -sS -L https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.PROTOC_VERSION }}/protoc-${{ env.PROTOC_VERSION }}-linux-x86_64.zip -o protoc.zip && unzip -q protoc.zip
+          curl -sS -L https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.PROTOC_VERSION }}/protoc-${{ env.PROTOC_VERSION }}-linux-x86_64.zip -o ${{ env.TOOLS_DIR }}/protoc.zip && unzip -q ${{ env.TOOLS_DIR }}/protoc.zip
           go get github.com/golang/protobuf/protoc-gen-go
           go get github.com/golang/mock/mockgen
           go get golang.org/x/tools/cmd/goimports
       - name: Generate stubs and mocks
         run: |
-          echo "$PATH"
           mkdir -p proto && mkdir -p mock_proto
           echo "protoc version: $(protoc --version)"
           protoc -I ${{ env.GRPC_DEFS_DIR }} -I ${{ env.GRPC_DEFS_DIR }}/vendor --go_out=plugins=grpc:proto ${{ env.GRPC_DEFS_DIR }}/init.proto ${{ env.GRPC_DEFS_DIR }}/security.proto
