@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo "Trigger from: $TRIGGER_REPO $TRIGGER_REASON"
+          echo "Trigger from: $TRIGGER_REPO@$TRIGGER_REASON"
       - name: Set up Go 1.13
         uses: actions/setup-go@v1
         with:
@@ -31,11 +31,17 @@ jobs:
           ref: refs/heads/simple
           token: ${{ secrets.QUORUMBOT_PAT }}
           path: grpc_defs
+      - name: Cache protoc compiler and tools
+        id: cache-tools
+        uses: actions/cache@v1
+        with:
+          path: ../tools
+          key: ${{ runner.os }}-tools
       - name: Install protoc compiler and tools
+        if: steps.cache-tools.outputs.cache-hit != 'true'
         run: |
           mkdir -p ../tools && cd ../tools
           curl -sS -L https://github.com/protocolbuffers/protobuf/releases/download/v3.9.1/protoc-3.9.1-linux-x86_64.zip -o protoc.zip && unzip -q protoc.zip
-          echo "protoc version: " && ./bin/protoc --version
           export GOPATH=$(pwd)
           go get github.com/golang/protobuf/protoc-gen-go
           go get github.com/golang/mock/mockgen
@@ -44,6 +50,7 @@ jobs:
       - name: Generate stubs and mocks
         run: |
           export PATH=$PATH:../tools/bin/ && mkdir -p proto && mkdir -p mock_proto
+          echo "protoc version: $(protoc --version)"
           protoc -I ../grpc_defs -I ../grpc_defs/vendor --go_out=plugins=grpc:proto ../grpc_defs/init.proto ../grpc_defs/security.proto
           export GOPATH=$(pwd)/..
           mockgen -package mock_proto -destination mock_proto/mock_initializer.go -source proto/init.pb.go
