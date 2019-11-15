@@ -13,9 +13,9 @@ jobs:
     steps:
       - name: Set up the environment
         run: |
-          tools_dir=${{ runner.temp }}/tools
-          grpc_defs_dir=${{ runner.temp }}/grpc_defs
-          mkdir -p $tools_dirs && mkdir -p $grpc_defs_dir
+          tools_dir=${{ runner.workspace }}/tools
+          grpc_defs_dir=${{ runner.workspace }}/grpc_defs
+          mkdir -p $tools_dir && mkdir -p $grpc_defs_dir
           echo "::set-env name=TOOLS_DIR::$tools_dir"
           echo "::set-env name=GRPC_DEFS_DIR::$grpc_defs_dir"
           echo "::add-path::$tools_dir/bin"
