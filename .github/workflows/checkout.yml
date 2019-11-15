@@ -26,8 +26,8 @@ jobs:
       - name: Install protoc compiler and tools
         run: |
           mkdir -p ../tools && cd ../tools
-          curl -q -L https://github.com/protocolbuffers/protobuf/releases/download/v3.9.1/protoc-3.9.1-linux-x86_64.zip -o protoc.zip && unzip -q protoc.zip
-          ./bin/protoc --version
+          curl -sS -L https://github.com/protocolbuffers/protobuf/releases/download/v3.9.1/protoc-3.9.1-linux-x86_64.zip -o protoc.zip && unzip -q protoc.zip
+          echo "protoc version: " && ./bin/protoc --version
           export GOPATH=$(pwd)
           go get github.com/golang/protobuf/protoc-gen-go
           go get github.com/golang/mock/mockgen
