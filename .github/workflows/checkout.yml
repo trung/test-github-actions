@@ -1,7 +1,7 @@
 # $GITHUB_WORKSPACE/src -> this project files
 # $GITHUB_WORKSPACE/grpc_defs -> proto files
 # $GITHUB_WORKSPACE/tools -> tools for code generation
-name: Update Source Code
+name: SDK Generation
 on: [push]
 jobs:
   build:
