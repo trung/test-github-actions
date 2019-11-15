@@ -5,15 +5,16 @@ on:
   repository_dispatch:
     types: [proto-files-updated]
 env:
-  PROTOC_VERSION: 3.9.1
   TRIGGER_REPO: ${{ github.event.client_payload.repo }}
   TRIGGER_REASON: ${{ github.event.client_payload.sha }}
-  TOOLS_DIR: {{ HOME }}/tools
-  GRPC_DEFS_DIR: {{ HOME }}/grpc_defs
 jobs:
-  build:
+  run:
     name: Run
     runs-on: ubuntu-latest
+    env:
+      PROTOC_VERSION: 3.9.1
+      TOOLS_DIR: ${{ HOME }}/tools
+      GRPC_DEFS_DIR: ${{ HOME }}/grpc_defs
     steps:
       - name: Debug
         run: |
