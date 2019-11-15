@@ -40,6 +40,7 @@ jobs:
           export GOPATH=$(pwd)/..
           mockgen -package mock_proto -destination mock_proto/mock_initializer.go -source proto/init.pb.go
           mockgen -package mock_proto -destination mock_proto/mock_security.go    -source proto/security.pb.go
+          goimports -w ./
           git add -A
           git status
       - name: Commit changes if any
