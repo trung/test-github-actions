@@ -6,10 +6,11 @@ package mock_proto
 
 import (
 	context "context"
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
-	reflect "reflect"
 )
 
 // MockTLSConfigurationSourceClient is a mock of TLSConfigurationSourceClient interface
