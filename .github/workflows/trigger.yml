@@ -13,4 +13,4 @@ jobs:
       with:
         token: ${{ secrets.QUORUMBOT_PAT }}
         event-type: proto-files-updated
-        client-payload: '{"repo": "${{ github.repository }}", "sha": "${{ github.sha }}"}'
+        client-payload: '{"repo": "${{ github.repository }}/${{ github.ref }}", "sha": "${{ github.sha }}"}'
