@@ -1,6 +1,5 @@
-# $GITHUB_WORKSPACE/src -> this project files
-# $GITHUB_WORKSPACE/grpc_defs -> proto files
-# $GITHUB_WORKSPACE/tools -> tools for code generation
+# $HOME/grpc_defs -> proto files
+# $HOME/tools -> tools for code generation
 name: SDK Generation
 on:
   repository_dispatch:
@@ -9,8 +8,8 @@ env:
   PROTOC_VERSION: 3.9.1
   TRIGGER_REPO: ${{ github.event.client_payload.repo }}
   TRIGGER_REASON: ${{ github.event.client_payload.sha }}
-  TOOLS_DIR: ${{ GITHUB_WORKSPACE }}/tools
-  GRPC_DEFS_DIR: ${{ GITHUB_WORKSPACE }}/grpc_defs
+  TOOLS_DIR: ${{ HOME }}/tools
+  GRPC_DEFS_DIR: ${{ HOME }}/grpc_defs
 jobs:
   build:
     name: Run
@@ -25,8 +24,6 @@ jobs:
           go-version: 1.13
       - name: Check out project files
         uses: actions/checkout@v1
-        with:
-          path: src
       - name: Check out proto files
         uses: actions/checkout@v1
         with:
