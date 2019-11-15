@@ -8,8 +8,8 @@ env:
   PROTOC_VERSION: 3.9.1
   TRIGGER_REPO: ${{ github.event.client_payload.repo }}
   TRIGGER_REASON: ${{ github.event.client_payload.sha }}
-  TOOLS_DIR: ${{ HOME }}/tools
-  GRPC_DEFS_DIR: ${{ HOME }}/grpc_defs
+  TOOLS_DIR: {{ HOME }}/tools
+  GRPC_DEFS_DIR: {{ HOME }}/grpc_defs
 jobs:
   build:
     name: Run
