@@ -45,11 +45,10 @@ jobs:
           git add -A
           git status
       - name: Commit changes
-        continue-on-error: true
         run: |
           git config --local user.name "Trung Nguyen"
           git config --local user.email "24930+trung@users.noreply.github.com"
-          git commit -am "Auto update"
+          git commit -am "Auto update" || echo
       - name: Push changes
         if: success()
         uses: ad-m/github-push-action@master
