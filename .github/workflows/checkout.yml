@@ -48,8 +48,12 @@ jobs:
         run: |
           git config --local user.name "Trung Nguyen"
           git config --local user.email "24930+trung@users.noreply.github.com"
-          git commit -am "Auto update"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.QUORUMBOT_PAT }}
+          (git commit -am "Auto update" && echo 0) || echo 1
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
+     #- name: Push changes
+     #   uses: ad-m/github-push-action@master
+     #   with:
+     #     github_token: ${{ secrets.QUORUMBOT_PAT }}
