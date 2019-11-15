@@ -10,11 +10,13 @@ jobs:
   run:
     name: Run
     runs-on: ubuntu-latest
+    env:
+      GRPC_DEFS_DIR_NAME: grpc_defs
     steps:
       - name: Set up the environment
         run: |
           tools_dir=${{ runner.workspace }}/tools
-          grpc_defs_dir=${{ runner.workspace }}/grpc_defs
+          grpc_defs_dir=${{ runner.workspace }}/${{ env.GRPC_DEFS_DIR_NAME }}
           mkdir -p $tools_dir
           echo "::set-env name=TOOLS_DIR::$tools_dir"
           echo "::set-env name=GRPC_DEFS_DIR::$grpc_defs_dir"
@@ -33,7 +35,7 @@ jobs:
           repository: QuorumEngineering/quorum-plugin-definitions
           ref: refs/heads/simple
           token: ${{ secrets.QUORUMBOT_PAT }}
-          path: ${{ env.GRPC_DEFS_DIR }}
+          path: ${{ env.GRPC_DEFS_DIR_NAME }}
 #       Currently actions/cache doesn't support respository_dispatch event: https://github.com/actions/cache/issues/63
 #       - name: Cache protoc compiler and tools
 #         id: cache-tools
