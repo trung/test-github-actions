@@ -9,8 +9,8 @@ env:
   PROTOC_VERSION: 3.9.1
   TRIGGER_REPO: ${{ github.event.client_payload.repo }}
   TRIGGER_REASON: ${{ github.event.client_payload.sha }}
-  TOOLS_DIR: ${{ env.GITHUB_WORKSPACE }}/tools
-  GRPC_DEFS_DIR: ${{ env.GITHUB_WORKSPACE }}/grpc_defs
+  TOOLS_DIR: ${{ GITHUB_WORKSPACE }}/tools
+  GRPC_DEFS_DIR: ${{ GITHUB_WORKSPACE }}/grpc_defs
 jobs:
   build:
     name: Run
@@ -40,25 +40,25 @@ jobs:
       #   uses: actions/cache@v1
       #   with:
       #     path: ../tools
-      #     key: ${{ runner.os }}-tools-$${{ env.PROTOC_VERSION }}
+      #     key: ${{ runner.os }}-tools-${{ PROTOC_VERSION }}
       - name: Install protoc compiler and tools
         # if: steps.cache-tools.outputs.cache-hit != 'true'
         env:
-          GOPATH: ${{ env.TOOLS_DIR }}
+          GOPATH: ${{ TOOLS_DIR }}
         run: |
-          mkdir -p ${{ env.GOPATH}} && cd ${{ env.GOPATH }}
-          curl -sS -L https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.PROTOC_VERSION }}/protoc-${{ env.PROTOC_VERSION }}-linux-x86_64.zip -o protoc.zip && unzip -q protoc.zip
+          mkdir -p ${{ GOPATH}} && cd ${{ GOPATH }}
+          curl -sS -L https://github.com/protocolbuffers/protobuf/releases/download/v${{ PROTOC_VERSION }}/protoc-${{ PROTOC_VERSION }}-linux-x86_64.zip -o protoc.zip && unzip -q protoc.zip
           go get github.com/golang/protobuf/protoc-gen-go
           go get github.com/golang/mock/mockgen
           go get golang.org/x/tools/cmd/goimports
       - name: Generate stubs and mocks
         env:
-          PATH: "${{ env.PATH }}:${{ env.TOOLS_DIR }}/bin"
-          GOPATH: ${{ env.GITHUB_WORKSPACE }}
+          PATH: "${{ PATH }}:${{ TOOLS_DIR }}/bin"
+          GOPATH: ${{ GITHUB_WORKSPACE }}
         run: |
           mkdir -p proto && mkdir -p mock_proto
           echo "protoc version: $(protoc --version)"
-          protoc -I ${{ env.GRPC_DEFS_DIR }} -I ${{ env.GRPC_DEFS_DIR }}/vendor --go_out=plugins=grpc:proto ${{ env.GRPC_DEFS_DIR }}/init.proto ${{ env.GRPC_DEFS_DIR }}/security.proto
+          protoc -I ${{ GRPC_DEFS_DIR }} -I ${{ GRPC_DEFS_DIR }}/vendor --go_out=plugins=grpc:proto ${{ GRPC_DEFS_DIR }}/init.proto ${{ GRPC_DEFS_DIR }}/security.proto
           mockgen -package mock_proto -destination mock_proto/mock_initializer.go -source proto/init.pb.go
           mockgen -package mock_proto -destination mock_proto/mock_security.go    -source proto/security.pb.go
           goimports -w ./
