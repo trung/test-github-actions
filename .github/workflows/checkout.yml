@@ -1,11 +1,11 @@
 # $GITHUB_WORKSPACE/src -> this project files
-# $GITHUB_WORKSPACE/grpc -> proto files
+# $GITHUB_WORKSPACE/grpc_defs -> proto files
 # $GITHUB_WORKSPACE/tools -> tools for code generation
 name: Update Source Code
 on: [push]
 jobs:
   build:
-    name: Update
+    name: Run
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go 1.13
@@ -22,8 +22,8 @@ jobs:
           repository: QuorumEngineering/quorum-plugin-definitions
           ref: refs/heads/simple
           token: ${{ secrets.QUORUMBOT_PAT }}
-          path: grpc
-      - name: Install tools
+          path: grpc_defs
+      - name: Install protoc compiler and tools
         run: |
           mkdir -p ../tools && cd ../tools
           curl -q -L https://github.com/protocolbuffers/protobuf/releases/download/v3.9.1/protoc-3.9.1-linux-x86_64.zip -o protoc.zip && unzip -q protoc.zip
@@ -33,23 +33,21 @@ jobs:
           go get github.com/golang/mock/mockgen
           go get golang.org/x/tools/cmd/goimports
           ls -lha ./bin
-      - name: Generate code
+      - name: Generate stubs and mocks
         run: |
-          export PATH=$PATH:../tools/bin/ && mkdir -p grpc/proto && mkdir -p grpc/mock_proto
-          protoc -I ../grpc -I ../grpc/vendor --go_out=plugins=grpc:grpc/proto ../grpc/init.proto ../grpc/helloworld.proto ../grpc/security.proto
+          export PATH=$PATH:../tools/bin/ && mkdir -p proto && mkdir -p mock_proto
+          protoc -I ../grpc_defs -I ../grpc_defs/vendor --go_out=plugins=grpc:proto ../grpc_defs/init.proto ../grgrpc_defspc/security.proto
           export GOPATH=$(pwd)/..
-          mockgen -package mock_proto -destination grpc/mock_proto/mock_initializer.go -source grpc/proto/init.pb.go
-          mockgen -package mock_proto -destination grpc/mock_proto/mock_helloworld.go  -source grpc/proto/helloworld.pb.go
-          mockgen -package mock_proto -destination grpc/mock_proto/mock_security.go    -source grpc/proto/security.pb.go
-          ls -lha grpc/proto
+          mockgen -package mock_proto -destination mock_proto/mock_initializer.go -source proto/init.pb.go
+          mockgen -package mock_proto -destination mock_proto/mock_security.go    -source proto/security.pb.go
           git add -A
           git status
-      - name: Commit changes
+      - name: Commit changes if any
         run: |
           git config --local user.name "Trung Nguyen"
           git config --local user.email "24930+trung@users.noreply.github.com"
           git commit -am "Auto update" || echo
-      - name: Push changes
+      - name: Push changes if any
         if: success()
         uses: ad-m/github-push-action@master
         with:
