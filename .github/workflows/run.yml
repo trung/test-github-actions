@@ -21,12 +21,6 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: 1.13
-      - name: Cache protoc compiler and tools
-        id: cache-tools
-        uses: actions/cache@v1
-        with:
-          path: ../tools
-          key: ${{ runner.os }}-tools-$${{ env.PROTOC_VERSION }}
       - name: Check out project files
         uses: actions/checkout@v1
         with:
@@ -38,6 +32,13 @@ jobs:
           ref: refs/heads/simple
           token: ${{ secrets.QUORUMBOT_PAT }}
           path: grpc_defs
+      # Currently actions/cache doesn't support respository_dispatch event: https://github.com/actions/cache/issues/63   
+      # - name: Cache protoc compiler and tools
+      #   id: cache-tools
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: ../tools
+      #     key: ${{ runner.os }}-tools-$${{ env.PROTOC_VERSION }}
       - name: Install protoc compiler and tools
         if: steps.cache-tools.outputs.cache-hit != 'true'
         run: |
