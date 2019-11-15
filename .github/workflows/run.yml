@@ -1,74 +1,69 @@
-# $HOME/grpc_defs -> proto files
-# $HOME/tools -> tools for code generation
 name: SDK Generation
 on: [push]
 #  repository_dispatch:
 #    types: [proto-files-updated]
-#env:
-#  PROTOC_VERSION: 3.9.1
-#  TRIGGER_REPO: ${{ github.event.client_payload.repo }}
-#  TRIGGER_REASON: ${{ github.event.client_payload.sha }}
+env:
+  PROTOC_VERSION: 3.9.1
+  TRIGGER_REPO: ${{ github.event.client_payload.repo }}
+  TRIGGER_REASON: ${{ github.event.client_payload.sha }}
 jobs:
   run:
     name: Run
     runs-on: ubuntu-latest
+    env:
+      TOOLS_DIR: ${{ runner.temp }}/tools
+      GRPC_DEFS_DIR: ${{ runner.temp }}/grpc_defs
     steps:
       - name: Debug
         run: |
-          echo "${{ toJson(env) }}"
-          echo "${{ toJson(github) }}"
-          echo "${{ toJson(runner) }}"
           echo "Trigger from: $TRIGGER_REPO@$TRIGGER_REASON"
-#      - name: Set up Go 1.13
-#        uses: actions/setup-go@v1
-#        with:
-#          go-version: 1.13
-#      - name: Check out project files
-#        uses: actions/checkout@v1
-#      - name: Check out proto files
-#        uses: actions/checkout@v1
-#        with:
-#          repository: QuorumEngineering/quorum-plugin-definitions
-#          ref: refs/heads/simple
-#          token: ${{ secrets.QUORUMBOT_PAT }}
-#          path: ${{ HOME }}/grpc_defs
-#      # Currently actions/cache doesn't support respository_dispatch event: https://github.com/actions/cache/issues/63
-#      # - name: Cache protoc compiler and tools
-#      #   id: cache-tools
-#      #   uses: actions/cache@v1
-#      #   with:
-#      #     path: ../tools
-#      #     key: ${{ runner.os }}-tools-${{ PROTOC_VERSION }}
-#      - name: Install protoc compiler and tools
-#        # if: steps.cache-tools.outputs.cache-hit != 'true'
-#        env:
-#          GOPATH: ${{ HOME }}/tools
-#        run: |
-#          mkdir -p ${{ GOPATH}} && cd ${{ GOPATH }}
-#          curl -sS -L https://github.com/protocolbuffers/protobuf/releases/download/v${{ PROTOC_VERSION }}/protoc-${{ PROTOC_VERSION }}-linux-x86_64.zip -o protoc.zip && unzip -q protoc.zip
-#          go get github.com/golang/protobuf/protoc-gen-go
-#          go get github.com/golang/mock/mockgen
-#          go get golang.org/x/tools/cmd/goimports
-#      - name: Generate stubs and mocks
-#        env:
-#          PATH: "${{ PATH }}:${{ HOME }}/tools/bin"
-#          GOPATH: ${{ GITHUB_WORKSPACE }}
-#          GRPC_DEFS_DIR: ${{ HOME }}/grpc_defs
-#        run: |
-#          mkdir -p proto && mkdir -p mock_proto
-#          echo "protoc version: $(protoc --version)"
-#          protoc -I ${{ GRPC_DEFS_DIR }} -I ${{ GRPC_DEFS_DIR }}/vendor --go_out=plugins=grpc:proto ${{ GRPC_DEFS_DIR }}/init.proto ${{ GRPC_DEFS_DIR }}/security.proto
-#          mockgen -package mock_proto -destination mock_proto/mock_initializer.go -source proto/init.pb.go
-#          mockgen -package mock_proto -destination mock_proto/mock_security.go    -source proto/security.pb.go
-#          goimports -w ./
-#          git add -A
-#          git status
-#      - name: Commit changes if any
-#        run: |
-#          git config --local user.name "Trung Nguyen"
-#          git config --local user.email "24930+trung@users.noreply.github.com"
-#          git commit -am "Auto update" || echo
-#      - name: Push changes if any
-#        uses: ad-m/github-push-action@master
-#        with:
-#          github_token: ${{ secrets.QUORUMBOT_PAT }}
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
+      - name: Check out project files
+        uses: actions/checkout@v1
+      - name: Check out proto files
+        uses: actions/checkout@v1
+        with:
+          repository: QuorumEngineering/quorum-plugin-definitions
+          ref: refs/heads/simple
+          token: ${{ secrets.QUORUMBOT_PAT }}
+          path: ${{ env.GRPC_DEFS_DIR }}
+#       Currently actions/cache doesn't support respository_dispatch event: https://github.com/actions/cache/issues/63
+#       - name: Cache protoc compiler and tools
+#         id: cache-tools
+#         uses: actions/cache@v1
+#         with:
+#           path: ../tools
+#           key: ${{ runner.os }}-tools-${{ PROTOC_VERSION }}
+      - name: Install protoc compiler and tools
+#         if: steps.cache-tools.outputs.cache-hit != 'true'
+        env:
+          GOPATH: ${{ env.TOOLS_DIR }}
+        run: |
+          mkdir -p ${{ GOPATH}} && cd ${{ GOPATH }}
+          curl -sS -L https://github.com/protocolbuffers/protobuf/releases/download/v${{ env.PROTOC_VERSION }}/protoc-${{ env.PROTOC_VERSION }}-linux-x86_64.zip -o protoc.zip && unzip -q protoc.zip
+          go get github.com/golang/protobuf/protoc-gen-go
+          go get github.com/golang/mock/mockgen
+          go get golang.org/x/tools/cmd/goimports
+      - name: Generate stubs and mocks
+        run: |
+          export PATH=$PATH:${{ env.TOOLS_DIR }}/bin"
+          mkdir -p proto && mkdir -p mock_proto
+          echo "protoc version: $(protoc --version)"
+          protoc -I ${{ env.GRPC_DEFS_DIR }} -I ${{ env.GRPC_DEFS_DIR }}/vendor --go_out=plugins=grpc:proto ${{ env.GRPC_DEFS_DIR }}/init.proto ${{ env.GRPC_DEFS_DIR }}/security.proto
+          mockgen -package mock_proto -destination mock_proto/mock_initializer.go -source proto/init.pb.go
+          mockgen -package mock_proto -destination mock_proto/mock_security.go    -source proto/security.pb.go
+          goimports -w ./
+          git add -A
+          git status
+      - name: Commit changes if any
+        run: |
+          git config --local user.name "Trung Nguyen"
+          git config --local user.email "24930+trung@users.noreply.github.com"
+          git commit -am "Auto update" || echo
+      - name: Push changes if any
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.QUORUMBOT_PAT }}
