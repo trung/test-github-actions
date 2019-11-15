@@ -2,12 +2,20 @@
 # $GITHUB_WORKSPACE/grpc_defs -> proto files
 # $GITHUB_WORKSPACE/tools -> tools for code generation
 name: SDK Generation
-on: [push]
+on: 
+  repository_dispatch:
+    types: [proto-files-updated]
+env:
+  TRIGGER_REPO: ${{ github.event.client_payload.repo }}
+  TRIGGER_REASON: ${{ github.event.client_payload.sha }}
 jobs:
   build:
     name: Run
     runs-on: ubuntu-latest
     steps:
+      - name: Debug
+        run: |
+          echo "Trigger from: $TRIGGER_REPO $TRIGGER_REASON"
       - name: Set up Go 1.13
         uses: actions/setup-go@v1
         with:
