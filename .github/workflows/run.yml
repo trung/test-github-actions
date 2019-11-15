@@ -4,10 +4,10 @@ name: SDK Generation
 on: [push]
 #  repository_dispatch:
 #    types: [proto-files-updated]
-env:
-  PROTOC_VERSION: 3.9.1
-  TRIGGER_REPO: ${{ github.event.client_payload.repo }}
-  TRIGGER_REASON: ${{ github.event.client_payload.sha }}
+#env:
+#  PROTOC_VERSION: 3.9.1
+#  TRIGGER_REPO: ${{ github.event.client_payload.repo }}
+#  TRIGGER_REASON: ${{ github.event.client_payload.sha }}
 jobs:
   run:
     name: Run
