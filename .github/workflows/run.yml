@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Debug
         run: |
-          echo "${{ env }}"
+          echo "${{ toJson(env) }}"
           echo "Trigger from: $TRIGGER_REPO@$TRIGGER_REASON"
 #      - name: Set up Go 1.13
 #        uses: actions/setup-go@v1
