@@ -38,7 +38,7 @@ jobs:
           release_name: ${{ steps.tag.outputs.value }}
           body: |
             This is something
-            ${{ steps.release_notes.outputs.value }}
+            And something
           draft: true
           prerelease: false
       - name: Upload binaries
