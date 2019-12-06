@@ -20,7 +20,7 @@ jobs:
         id: release_notes
         run: |
           text=$(awk '/^## ${{ steps.tag.outputs.value }}$/{flag=1;next}/^##/{flag=0}flag' CHANGELOG.md)
-          if [[ "$text" -eq "" ]]; then
+          if [[ "$text" == "" ]]; then
             echo "::error file=CHANGELOG.md::There is no release notes for ${{ steps.tag.outputs.value }}"
             exit 1
           fi
