@@ -7,7 +7,7 @@ name: Release
 
 jobs:
   prepare:
-    name: Prepare release
+    name: Prepare
     runs-on: ubuntu-latest
     steps:
       - name: Extract tag name
@@ -49,7 +49,8 @@ jobs:
           name: release_asset_upload_url
           path: upload_url.txt
   build:
-    name: Build and upload binaries
+    name: Build and upload
+    needs: prepare
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
