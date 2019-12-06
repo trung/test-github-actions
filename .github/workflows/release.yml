@@ -67,7 +67,7 @@ jobs:
       - name: Read upload_url
         id: upload_url
         run: |
-          text=$(cat release_asset_upload_url)
+          text=$(cat release_asset_upload_url/upload_url.txt)
           echo "::set-output name=value::$text"
       - name: Checkout code
         uses: actions/checkout@v1
