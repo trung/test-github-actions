@@ -42,7 +42,7 @@ jobs:
           prerelease: false
       - name: Write upload_url
         run: |
-          echo ${{ steps.create_release.outputs.upload_url }} > upload_url.txt
+          echo '${{ steps.create_release.outputs.upload_url }}' > upload_url.txt
       - name: Persist upload_url
         uses: actions/upload-artifact@v1
         with:
@@ -68,8 +68,7 @@ jobs:
         id: meta
         run: |
           ls -lha release_asset_upload_url
-          text=$(cat release_asset_upload_url/upload_url.txt)
-          echo "::set-output name=upload_url::$text"
+          echo "::set-output name=upload_url::$(cat release_asset_upload_url/upload_url.txt)"
           echo "::set-output name=version::${GITHUB_REF##*/}"
           echo "::set-output name=os::$(go env GOOS)"
           echo "::set-output name=arch::$(go env GOARCH)"
