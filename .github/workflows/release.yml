@@ -37,8 +37,7 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: ${{ steps.tag.outputs.value }}
           body: |
-            This is something
-            And something
+            ${{ steps.release_notes.outputs.value }}
           draft: true
           prerelease: false
       - name: Upload binaries
