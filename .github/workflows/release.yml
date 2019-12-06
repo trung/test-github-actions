@@ -56,19 +56,23 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
     steps:
-      - name: Extract tag name
-        id: tag
-        run: |
-          echo "::set-output name=value::${GITHUB_REF##*/}"
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13
       - name: Retrieve persisted upload_url
         uses: actions/download-artifact@v1
         with:
           name: release_asset_upload_url
-      - name: Read upload_url
-        id: upload_url
+      - name: Prepare metadata
+        id: meta
         run: |
+          ls -lha release_asset_upload_url
           text=$(cat release_asset_upload_url/upload_url.txt)
-          echo "::set-output name=value::$text"
+          echo "::set-output name=upload_url::$text"
+          echo "::set-output name=version::${GITHUB_REF##*/}"
+          echo "::set-output name=os::$(go env GOOS)"
+          echo "::set-output name=arch::$(go env GOARCH)"
       - name: Checkout code
         uses: actions/checkout@v1
       - name: Build binary
@@ -80,7 +84,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          upload_url: ${{ steps.upload_url.outputs.value }}
+          upload_url: ${{ steps.meta.outputs.upload_url }}
           asset_path: ./dist/something.zip
-          asset_name: something_${{ steps.tag.outputs.value }}_${{ matrix.os }}.zip
+          asset_name: something_${{ steps.meta.outputs.version }}_${{ steps.meta.outputs.os }}_${{ steps.meta.outputs.arch }}.zip
           asset_content_type: application/zip
