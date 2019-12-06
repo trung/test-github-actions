@@ -67,7 +67,6 @@ jobs:
       - name: Prepare metadata
         id: meta
         run: |
-          ls -lha release_asset_upload_url
           echo "::set-output name=upload_url::$(cat release_asset_upload_url/upload_url.txt)"
           echo "::set-output name=version::${GITHUB_REF##*/}"
           echo "::set-output name=os::$(go env GOOS)"
@@ -76,7 +75,7 @@ jobs:
         uses: actions/checkout@v1
       - name: Build binary
         run: |
-          echo "TBD"
+          make
       - name: Upload binary
         id: upload_binaries
         uses: actions/upload-release-asset@v1.0.1
