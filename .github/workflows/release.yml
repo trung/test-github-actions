@@ -6,8 +6,8 @@ on:
 name: Release
 
 jobs:
-  run:
-    name: Create release
+  prepare:
+    name: Prepare release
     runs-on: ubuntu-latest
     steps:
       - name: Extract tag name
@@ -15,7 +15,7 @@ jobs:
         run: |
           echo "::set-output name=value::${GITHUB_REF##*/}"
       - name: Checkout code
-        uses: actions/checkout@master
+        uses: actions/checkout@v1
       - name: Extract release notes
         id: release_notes
         run: |
@@ -40,13 +40,46 @@ jobs:
             ${{ steps.release_notes.outputs.value }}
           draft: true
           prerelease: false
-      - name: Upload binaries
+      - name: Write upload_url
+        run: |
+          echo ${{ steps.create_release.outputs.upload_url }} > upload_url.txt
+      - name: Persist upload_url
+        uses: actions/upload-artifact@v1
+        with:
+          name: release_asset_upload_url
+          path: upload_url.txt
+  build:
+    name: Build and upload binaries
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Extract tag name
+        id: tag
+        run: |
+          echo "::set-output name=value::${GITHUB_REF##*/}"
+      - name: Retrieve persisted upload_url
+        uses: actions/download-artifact@v1
+        with:
+          name: release_asset_upload_url
+      - name: Read upload_url
+        id: upload_url
+        run: |
+          text=$(cat release_asset_upload_url)
+          echo "::set-output name=value::$text"
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Build binary
+        run: |
+          echo "TBD"
+      - name: Upload binary
         id: upload_binaries
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.upload_url.outputs.value }}
           asset_path: ./dist/something.zip
-          asset_name: something_${{ steps.tag.outputs.value }}.zip
+          asset_name: something_${{ steps.tag.outputs.value }}_${{ matrix.os }}.zip
           asset_content_type: application/zip
