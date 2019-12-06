@@ -23,6 +23,9 @@ jobs:
             echo "::error file=CHANGELOG.md::There is no release notes for ${{ steps.tag.outputs.value }}"
             exit 1
           fi
+          text="${text//'%'/'%25'}"
+          text="${text//$'\n'/'%0A'}"
+          text="${text//$'\r'/'%0D'}"
           echo "::set-env name=RELEASE_NOTES::$text"
       - name: Create ${{ steps.tag.outputs.value }} release
         id: create_release
