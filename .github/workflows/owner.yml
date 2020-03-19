@@ -86,6 +86,11 @@ jobs:
         with:
           name: job2-job
           path: ${{ runner.temp }}/status
+      - name: Collect job 2 status
+        uses: actions/download-artifact@v1
+        with:
+          name: job11-job
+          path: ${{ runner.temp }}/status
       - name: Notify
         run: |
           cat ${{ runner.temp }}/status/*
