@@ -22,7 +22,7 @@ jobs:
           echo "::set-output name=location::$LOC"
       - name: Save job status
         if: always()
-        uses: actions/cache@v1
+        uses: pat-s/always-upload-cache@v1.1.4
         with:
           key: job1-job-${{ github.run_number }}
           path: ${{ steps.job_status.outputs.location }}
@@ -43,7 +43,7 @@ jobs:
           echo "::set-output name=location::$LOC"
       - name: Save job status
         if: always()
-        uses: actions/cache@v1
+        uses: pat-s/always-upload-cache@v1.1.4
         with:
           key: job11-job-${{ github.run_number }}
           path: ${{ steps.job_status.outputs.location }}  
@@ -64,7 +64,7 @@ jobs:
           echo "::set-output name=location::$LOC"
       - name: Save job status
         if: always()
-        uses: actions/cache@v1
+        uses: pat-s/always-upload-cache@v1.1.4
         with:
           key: job2-job-${{ github.run_number }}
           path: ${{ steps.job_status.outputs.location }}
@@ -78,17 +78,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Collect job 1 status
-        uses: actions/cache@v1
+        uses: pat-s/always-upload-cache@v1.1.4
         with:
           key: job1-job-${{ github.run_number }}
           path: ${{ runner.temp }}/status
       - name: Collect job 2 status
-        uses: actions/cache@v1
+        uses: pat-s/always-upload-cache@v1.1.4
         with:
           key: job2-job-${{ github.run_number }}
           path: ${{ runner.temp }}/status
       - name: Collect job 11 status
-        uses: actions/cache@v1
+        uses: pat-s/always-upload-cache@v1.1.4
         with:
           key: job11-job-${{ github.run_number }}
           path: ${{ runner.temp }}/status
