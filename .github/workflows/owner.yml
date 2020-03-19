@@ -18,7 +18,7 @@ jobs:
         run: |
           LOC="${{ runner.temp }}/status"
           mkdir -p $LOC
-          echo "${{ job.status }} - ${{ job.container.id }}" > $LOC/job1
+          echo "${{ job.status }}" > $LOC/job1
           echo "::set-output name=location::$LOC"
       - name: Save job status
         if: always()
@@ -39,7 +39,7 @@ jobs:
         run: |
           LOC="${{ runner.temp }}/status"
           mkdir -p $LOC
-          echo "${{ job.status }} - ${{ job.container.id }}" > $LOC/job11
+          echo "${{ job.status }}" > $LOC/job11
           echo "::set-output name=location::$LOC"
       - name: Save job status
         if: always()
@@ -60,7 +60,7 @@ jobs:
         run: |
           LOC="${{ runner.temp }}/status"
           mkdir -p $LOC
-          echo "${{ job.status }} - ${{ job.container.id }}" > $LOC/job2
+          echo "${{ job.status }}" > $LOC/job2
           echo "::set-output name=location::$LOC"
       - name: Save job status
         if: always()
@@ -76,6 +76,8 @@ jobs:
       - job2
       - job11
     runs-on: ubuntu-latest
+    env:
+      - ALL_JOBS="job1 job2 job11"
     steps:
       - name: Collect job 1 status
         uses: pat-s/always-upload-cache@v1.1.4
@@ -94,4 +96,15 @@ jobs:
           path: ${{ runner.temp }}/status
       - name: Notify
         run: |
-          cat ${{ runner.temp }}/status/*
+          echo "${{ github.repository }}"
+          jobs=($(echo ${{ env.ALL_JOBS }}))
+          # check if all jobs are success
+          workflow_status="Success"
+          for j in $jobs; do
+            status=$(cat cat ${{ runner.temp }}/status/$j || echo "NotRun")
+            echo "$j : $status"
+            if [ "$status" != "Success" ]; then
+              workflow_status="Failure"
+            fi
+          done
+          echo "${{ github.workflow }} Run #${{ github.run_number }}: $workflow_status"          
