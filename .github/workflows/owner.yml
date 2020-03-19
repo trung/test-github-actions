@@ -97,7 +97,7 @@ jobs:
       - name: Notify
         run: |
           echo "${{ github.repository }}"
-          jobs=($(echo ${{ env.ALL_JOBS }}))
+          jobs=($(echo "${{ env.ALL_JOBS }}"))
           # check if all jobs are success
           workflow_status="Success"
           for j in $jobs; do
