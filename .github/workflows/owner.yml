@@ -1,16 +1,17 @@
-name: extract-owner
+name: Status Management
 on:
   push:
     branches:
       - master
 jobs:
   job1:
-    name: Job 1
+    name: Failed job
     runs-on: ubuntu-latest
     steps:
       - name: Step 1
         run: |
           echo "${{ toJson(job) }}"
+          cat foo
       - name: Record job status
         id: job_status
         if: always()
