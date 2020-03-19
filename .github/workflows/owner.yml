@@ -77,7 +77,7 @@ jobs:
       - job11
     runs-on: ubuntu-latest
     env:
-      - ALL_JOBS="job1 job2 job11"
+      ALL_JOBS: "job1 job2 job11"
     steps:
       - name: Collect job 1 status
         uses: pat-s/always-upload-cache@v1.1.4
