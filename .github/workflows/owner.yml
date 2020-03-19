@@ -22,15 +22,15 @@ jobs:
           echo "::set-output name=location::$LOC"
       - name: Save job status
         if: always()
-        uses: actions/upload-artifact@v1
+        uses: actions/cache@v1
         with:
-          name: job1-job
+          name: job1-job-${{ github.run_number }}
           path: ${{ steps.job_status.outputs.location }}
   job11:
     name: Dependent job
+    if: success()
     needs:
       - job1
-    if: success()
     runs-on: ubuntu-latest
     steps:
       - name: Record job status
@@ -43,9 +43,9 @@ jobs:
           echo "::set-output name=location::$LOC"
       - name: Save job status
         if: always()
-        uses: actions/upload-artifact@v1
+        uses: actions/cache@v1
         with:
-          name: job11-job
+          name: job11-job-${{ github.run_number }}
           path: ${{ steps.job_status.outputs.location }}  
   job2:
     name: Job 2
@@ -64,9 +64,9 @@ jobs:
           echo "::set-output name=location::$LOC"
       - name: Save job status
         if: always()
-        uses: actions/upload-artifact@v1
+        uses: actions/cache@v1
         with:
-          name: job2-job
+          name: job2-job-${{ github.run_number }}
           path: ${{ steps.job_status.outputs.location }}
   notify:
     if: always()
@@ -74,22 +74,23 @@ jobs:
     needs:
       - job1
       - job2
+      - job11
     runs-on: ubuntu-latest
     steps:
       - name: Collect job 1 status
-        uses: actions/download-artifact@v1
+        uses: actions/cache@v1
         with:
-          name: job1-job
+          name: job1-job-${{ github.run_number }}
           path: ${{ runner.temp }}/status
       - name: Collect job 2 status
-        uses: actions/download-artifact@v1
+        uses: actions/cache@v1
         with:
-          name: job2-job
+          name: job2-job-${{ github.run_number }}
           path: ${{ runner.temp }}/status
-      - name: Collect job 2 status
-        uses: actions/download-artifact@v1
+      - name: Collect job 11 status
+        uses: actions/cache@v1
         with:
-          name: job11-job
+          name: job11-job-${{ github.run_number }}
           path: ${{ runner.temp }}/status
       - name: Notify
         run: |
