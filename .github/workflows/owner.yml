@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Step 1
         run: |
-          echo "${{ toJson(job) }}"
+          echo "${{ toJson(github.event) }}"
           cat foo
       - name: Record job status
         id: job_status
