@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Step 1
         run: |
-          echo "${{ toJson(github.event) }}"
+          echo "Job failed on purpose"
           cat foo
       - name: Record job status
         id: job_status
@@ -101,6 +101,7 @@ jobs:
           # check if all jobs are success
           workflow_status="Success"
           for j in $jobs; do
+            echo "Checking job status [$j]"
             status=$(cat cat ${{ runner.temp }}/status/$j || echo "NotRun")
             echo "$j : $status"
             if [ "$status" != "Success" ]; then
