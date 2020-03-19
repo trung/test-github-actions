@@ -98,6 +98,7 @@ jobs:
         run: |
           echo "${{ github.repository }}"
           jobs=(${{ env.ALL_JOBS }})
+          echo "${#jobs[@]}"
           # check if all jobs are success
           workflow_status="Success"
           for j in $jobs; do
