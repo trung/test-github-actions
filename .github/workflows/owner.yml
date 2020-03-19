@@ -102,7 +102,7 @@ jobs:
           workflow_status="Success"
           for j in $jobs; do
             echo "Checking job status [$j]"
-            status=$(cat cat ${{ runner.temp }}/status/$j || echo "NotRun")
+            status=$(cat ${{ runner.temp }}/status/$j 2>/dev/null || echo "NotRun")
             echo "$j : $status"
             if [ "$status" != "Success" ]; then
               workflow_status="Failure"
