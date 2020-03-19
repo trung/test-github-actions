@@ -26,6 +26,27 @@ jobs:
         with:
           name: job1-job
           path: ${{ steps.job_status.outputs.location }}
+  job11:
+    name: Dependent job
+    needs:
+      - job1
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record job status
+        id: job_status
+        if: always()
+        run: |
+          LOC="${{ runner.temp }}/status"
+          mkdir -p $LOC
+          echo "${{ job.status }} - ${{ job.container.id }}" > $LOC/job11
+          echo "::set-output name=location::$LOC"
+      - name: Save job status
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: job11-job
+          path: ${{ steps.job_status.outputs.location }}  
   job2:
     name: Job 2
     runs-on: ubuntu-latest
