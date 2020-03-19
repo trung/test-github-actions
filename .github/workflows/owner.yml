@@ -4,15 +4,66 @@ on:
     branches:
       - master
 jobs:
-  trigger:
-    name: Trigger quorum-security-plugin-sdk-go generation
+  job1:
+    name: Job 1
     runs-on: ubuntu-latest
     steps:
-      - name: Extract repository owner
+      - name: Step 1
         run: |
-          repo=${{ github.repository }}
-          owner=${repo%/*}
-          echo "::set-env name=REPO_OWNER::$owner"
-      - name: Output owner
+          echo "${{ toJson(job) }}"
+      - name: Record job status
+        id: job_status
+        if: always()
         run: |
-          echo "${{ env.REPO_OWNER }}"
+          LOC="${{ runner.temp }}/status"
+          mkdir -p $LOC
+          echo "${{ job.status }} - ${{ job.container.id }}" > $LOC/job1
+          echo "::set-output name=location::$LOC"
+      - name: Save job status
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: job1-job
+          path: ${{ steps.job_status.outputs.location }}
+  job2:
+    name: Job 2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1
+        run: |
+          echo "${{ toJson(job) }}"
+      - name: Record job status
+        id: job_status
+        if: always()
+        run: |
+          LOC="${{ runner.temp }}/status"
+          mkdir -p $LOC
+          echo "${{ job.status }} - ${{ job.container.id }}" > $LOC/job2
+          echo "::set-output name=location::$LOC"
+      - name: Save job status
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: job2-job
+          path: ${{ steps.job_status.outputs.location }}
+  notify:
+    if: always()
+    name: Notify
+    needs:
+      - job1
+      - job2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect job 1 status
+        uses: actions/download-artifact@v1
+        with:
+          name: job1-job
+          path: ${{ runner.temp }}/status
+      - name: Collect job 2 status
+        uses: actions/download-artifact@v1
+        with:
+          name: job2-job
+          path: ${{ runner.temp }}/status
+      - name: Notify
+        run: |
+          cat ${{ runner.temp }}/status/*
