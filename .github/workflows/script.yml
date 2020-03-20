@@ -1,0 +1,53 @@
+name: Status Management
+on:
+  push:
+    branches:
+      - master
+jobs:
+  job1:
+    name: Failed job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1
+        run: |
+          echo "Job failed on purpose"
+          cat foo
+  job11:
+    name: Dependent job
+    if: success()
+    needs:
+      - job1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1
+        run: echo "Step 1"  
+  job2:
+    name: Job 2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1
+        run: |
+          echo "${{ toJson(job) }}"
+  notify:
+    if: always()
+    name: Notify
+    needs:
+      - job1
+      - job2
+      - job11
+    runs-on: ubuntu-latest
+    steps:
+      - name: Collect job status
+        id: status
+        uses: actions/github-script@0.8.0
+        with:
+          script: |
+            const out = await github.actions.getWorkflowRun({
+                "trung",
+                "test-github-actions",
+                ${{ github.run_id }}
+            });
+            return JSON.stringify(out)
+      - name: Notify
+        run: |
+          echo "${{ steps.status.outputs.result }}"       
