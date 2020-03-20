@@ -106,7 +106,7 @@ jobs:
                 }
                 fields.push({
                     type: "mrkdwn",
-                    text: status_icon_func(j.conclusion) + " <" + j.html_url + "|" + j.name + "*>\n  \u21b3 completed in " + date_diff_func(new Date(j.started_at), new Date(j.completed_at))
+                    text: status_icon_func(j.conclusion) + " <" + j.html_url + "|* + j.name + "*>\n   \u21b3 completed in " + date_diff_func(new Date(j.started_at), new Date(j.completed_at))
                 })
             }
             
