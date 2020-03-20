@@ -44,9 +44,9 @@ jobs:
           script: |
             console.log("get workflow run")
             const out = await github.actions.getWorkflowRun({
-                "trung",
-                "test-github-actions",
-                "${{ github.run_id }}"
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: ${{ github.run_id }}
             })
             console.log(out)
             return out
