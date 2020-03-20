@@ -32,17 +32,19 @@ jobs:
     name: Job 3
     runs-on: ubuntu-latest
     steps:
-        - name: Step 1
+      - name: Step 1
         run: |
             echo "${{ toJson(job) }}"
   job4:
     name: Job 4
+    needs:
+      - job3
     runs-on: ubuntu-latest
     steps:
-        - name: Step 1
+      - name: Step 1
         run: |
             echo "${{ toJson(job) }}"
-    notify:
+  notify:
     if: always()
     name: Notify
     needs:
