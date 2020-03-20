@@ -55,7 +55,7 @@ jobs:
             for (j of jobs_response.data.jobs) {
                 fields.push({
                     type: "mrkdwn",
-                    text: "j.conclusion - j.name"
+                    text: j.conclusion + " - " + j.name
                 })
                 if (j.conclusion != 'success') {
                     workflow_conclusion = "failure"
