@@ -37,7 +37,7 @@ jobs:
       - job11
     runs-on: ubuntu-latest
     steps:
-      - name: Prepare message
+      - name: Prepare Slack message
         id: status
         uses: actions/github-script@0.8.0
         with:
@@ -104,7 +104,7 @@ jobs:
                 }
                 fields.push({
                     type: "mrkdwn",
-                    text: status_icon_func(j.conclusion) + " " + j.name + " completed in " + date_diff_func(new Date(j.completed_at), new Date(j.created_at)) + "\n\\u2009"
+                    text: status_icon_func(j.conclusion) + " " + j.name + " completed in " + date_diff_func(new Date(j.completed_at), new Date(j.started_at)) + "\n\\u2009"
                 })
             }
             
@@ -134,7 +134,7 @@ jobs:
                 ]
             }
             return slack_msg
-      - name: Notify
+      - name: Send to Slack
         if: success()
         run: |
-          echo '${{ steps.status.outputs.result }}'
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL}} -H "Content-type: application-json" --data '${{ steps.status.outputs.result }}'
