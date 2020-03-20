@@ -28,13 +28,29 @@ jobs:
       - name: Step 1
         run: |
           echo "${{ toJson(job) }}"
-  notify:
+  job3:
+    name: Job 3
+    runs-on: ubuntu-latest
+    steps:
+        - name: Step 1
+        run: |
+            echo "${{ toJson(job) }}"
+  job4:
+    name: Job 4
+    runs-on: ubuntu-latest
+    steps:
+        - name: Step 1
+        run: |
+            echo "${{ toJson(job) }}"
+    notify:
     if: always()
     name: Notify
     needs:
       - job1
       - job2
       - job11
+      - job3
+      - job4
     runs-on: ubuntu-latest
     steps:
       - name: Prepare Slack message
@@ -106,7 +122,7 @@ jobs:
                 }
                 fields.push({
                     type: "mrkdwn",
-                    text: status_icon_func(j.conclusion) + " <" + j.html_url + "|* + j.name + "*>\n   \u21b3 completed in " + date_diff_func(new Date(j.started_at), new Date(j.completed_at))
+                    text: status_icon_func(j.conclusion) + " <" + j.html_url + "|*" + j.name + "*>\n   \u21b3 completed in " + date_diff_func(new Date(j.started_at), new Date(j.completed_at))
                 })
             }
             
@@ -123,7 +139,7 @@ jobs:
                         type: "section",
                         text: {
                             type: "mrkdwn",
-                            text: status_icon_func(workflow_status) + " *${{ github.workflow }}*\nWorkflow run <" + wf_run.data.html_url + "|#${{ github.run_number }}> completed in " + date_diff_func(new Date(wf_run.data.created_at), new Date())
+                            text: status_icon_func(workflow_status) + " *${{ github.workflow }}*\nWorkflow run <" + wf_run.data.html_url + "|#${{ github.run_number }}> completed in " + date_diff_func(new Date(wf_run.data.created_at), new Date(wf_run.data.updated_at))
                         }
                     },
                     {
