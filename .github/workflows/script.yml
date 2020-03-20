@@ -55,8 +55,8 @@ jobs:
             var workflow_conclusion = "success"
             for j of jobs_response.jobs {
                 fields.push({
-					type: "mrkdwn",
-					text: "j.conclusion - j.name"
+					"type": "mrkdwn",
+					"text": "j.conclusion - j.name"
                 })
                 if j.conclusion != 'success' {
                     workflow_conclusion = "failure"
@@ -64,10 +64,10 @@ jobs:
             }
             // can do all kind of javascript magic here to format the right message
             var slack_msg = {
-                blocks: [
+                "blocks": [
                     {
-                        type: "section",
-                        fields: fields
+                        "type": "section",
+                        "fields": fields
                     }
                 ]
             }
