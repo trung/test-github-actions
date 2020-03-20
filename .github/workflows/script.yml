@@ -90,15 +90,15 @@ jobs:
                 delta -= hours * 3600
                 var minutes = Math.floor(delta / 60) % 60
                 delta -= minutes * 60
-                var seconds = Math.floor(delta % 60)
-                var format_func = function(v, text) {
-                    if (v <= 0) {
+                var seconds = delta % 60
+                var format_func = function(v, text, check) {
+                    if (v <= 0 && check) {
                         return ""
                     } else {
                         return v + text
                     }
                 }
-                return format_func(days, "d") + format_func(hours, "h") + format_func(minutes, "m") + format_func(seconds, "s")
+                return format_func(days, "d", true) + format_func(hours, "h", true) + format_func(minutes, "m", true) + format_func(seconds, "s", false)
             }
             var status_icon_func = function(s) {
                 switch (s) {
