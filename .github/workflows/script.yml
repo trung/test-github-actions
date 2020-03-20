@@ -46,10 +46,10 @@ jobs:
             const out = await github.actions.getWorkflowRun({
                 "trung",
                 "test-github-actions",
-                ${{ github.run_id }}
+                "${{ github.run_id }}"
             })
             console.log(out)
-            return JSON.stringify(out)
+            return out
       - name: Notify
         run: |
           echo "${{ steps.status.outputs.result }}"       
