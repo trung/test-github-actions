@@ -104,7 +104,7 @@ jobs:
                 }
                 fields.push({
                     type: "mrkdwn",
-                    text: status_icon_func(j.conclusion) + " " + j.name + " completed in " + date_diff_func(new Date(j.completed_at), new Date(j.started_at)) + "\n\u2009"
+                    text: status_icon_func(j.conclusion) + " " + j.name + " completed in " + date_diff_func(new Date(j.completed_at), new Date(j.created_at)) + "\n\\u2009"
                 })
             }
             
@@ -114,14 +114,14 @@ jobs:
                         type: "section",
                         text: {
                             type: "mrkdwn",
-                            text: "*<https://github.com/${{ github.repository }}|${{ github.repository }}@${{ github.ref }}>*"
+                            text: "*<https://github.com/${{ github.repository }}|${{ github.repository }}>*@${{ github.ref }}"
                         }
                     },
                     {
                         type: "section",
                         text: {
                             type: "mrkdwn",
-                            text: status_icon_func(workflow_status) + " *`${{ github.workflow }}`* Run <" + wf_run.data.html_url + "|#${{ github.run_number }}> completed in " + date_diff_func(new Date() - new Date(wf_run.data.started_at))
+                            text: status_icon_func(workflow_status) + " *`${{ github.workflow }}`* Run <" + wf_run.data.html_url + "|#${{ github.run_number }}> completed in " + date_diff_func(new Date() - new Date(wf_run.data.created_at))
                         }
                     },
                     {
