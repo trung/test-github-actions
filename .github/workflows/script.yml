@@ -42,11 +42,13 @@ jobs:
         uses: actions/github-script@0.8.0
         with:
           script: |
+            console.log("get workflow run")
             const out = await github.actions.getWorkflowRun({
                 "trung",
                 "test-github-actions",
                 ${{ github.run_id }}
-            });
+            })
+            console.log(out)
             return JSON.stringify(out)
       - name: Notify
         run: |
