@@ -80,7 +80,7 @@ jobs:
                 }
                 return format_func(days, "d") + format_func(hours, "h") + format_func(minutes, "m") + format_func(seconds, "s")
             }
-            var status_icon_func = func(s) {
+            var status_icon_func = function(s) {
                 switch (s) {
                 case "success":
                     return ":white_check_mark:"
@@ -99,7 +99,7 @@ jobs:
                 if (j.status != "completed") {
                     continue
                 }
-                if (j.conclusion == 'failure') {
+                if (j.conclusion == "failure") {
                     workflow_status = "failure"
                 }
                 fields.push({
