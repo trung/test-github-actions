@@ -1,4 +1,4 @@
-name: Status Management
+name: Status Management using script
 on:
   push:
     branches:
