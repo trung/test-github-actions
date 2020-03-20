@@ -90,6 +90,7 @@ jobs:
                     return ":z:"
                 }
             }
+            const commit = "${{ github.sha }}".substr(0, 6)
 
             // build the message
             var fields = []
@@ -105,7 +106,7 @@ jobs:
                 }
                 fields.push({
                     type: "mrkdwn",
-                    text: status_icon_func(j.conclusion) + " " + j.name + "\ncompleted in " + date_diff_func(new Date(j.started_at), new Date(j.completed_at))
+                    text: status_icon_func(j.conclusion) + " <" + j.html_url + "|" + j.name + "*>\n\u21b3 completed in " + date_diff_func(new Date(j.started_at), new Date(j.completed_at))
                 })
             }
             
@@ -115,7 +116,7 @@ jobs:
                         type: "section",
                         text: {
                             type: "mrkdwn",
-                            text: "<https://github.com/${{ github.repository }}|*${{ github.repository }}*>\nfrom ${{ github.ref }}"
+                            text: "<https://github.com/${{ github.repository }}|*${{ github.repository }}*>\nfrom *${{ github.ref }}@" + commit + "*"
                         }
                     },
                     {
