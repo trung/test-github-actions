@@ -50,9 +50,27 @@ jobs:
             })
             console.log("get jobs for workflow run")
             const jobs_response = await github.request(wf_run.data.jobs_url)
-            console.log(jobs_response.data.jobs)
-            
-            return {}
+            var fields = []
+            var workflow_conclusion = "success"
+            for (j of jobs_response.data.jobs) {
+                fields.push({
+                    type: "mrkdwn",
+                    text: "j.conclusion - j.name"
+                })
+                if (j.conclusion != 'success') {
+                    workflow_conclusion = "failure"
+                }
+            }
+            // can do all kind of javascript magic here to format the right message
+            var slack_msg = {
+                blocks: [
+                    {
+                        type: "section",
+                        fields: fields
+                    }
+                ]
+            }
+            return slack_msg
       - name: Notify
         run: |
           echo '${{ steps.status.outputs.result }}'
