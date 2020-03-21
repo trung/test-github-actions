@@ -107,7 +107,7 @@ jobs:
                 case "failure":
                     return ":no_entry:"
                 default:
-                    return ":z:"
+                    return ":zzz:"
                 }
             }
             const commit = "${{ github.sha }}".substr(0, 6)
