@@ -98,12 +98,16 @@ jobs:
             }
             var status_icon_func = function(s) {
                 switch (s) {
-                case "success":
+                case "w_success":
                     return ":white_check_mark:"
-                case "failure":
+                case "w_failure":
                     return ":no_entry:"
+                case "success":
+                    return "\u2713"
+                case "failure":
+                    return "\u2717"
                 default:
-                    return ":zzz:"
+                    return "\u2013"
                 }
             }
             const commit = "${{ github.sha }}".substr(0, 6)
@@ -112,12 +116,12 @@ jobs:
               pr += ",<"+ p.url + "|#" + p.number + ">"
             }
             if (pr != "") {
-              pr = "(" + pr.substr(1) + ")"
+              pr = "for " + pr.substr(1)
             }
 
             // build the message
             var fields = []
-            var workflow_status = "success"
+            var workflow_status = "w_success"
             for (j of jobs_response.data.jobs) {
                 console.log(j.name, ":", j.status, j.conclusion, j.started_at, j.completed_at)
                 // ignore the current job running this script
@@ -125,11 +129,11 @@ jobs:
                     continue
                 }
                 if (j.conclusion == "failure") {
-                    workflow_status = "failure"
+                    workflow_status = "w_failure"
                 }
                 fields.push({
                     type: "mrkdwn",
-                    text: status_icon_func(j.conclusion) + " <" + j.html_url + "|*" + j.name + "*>\n   \u21b3 completed in " + date_diff_func(new Date(j.started_at), new Date(j.completed_at))
+                    text: status_icon_func(j.conclusion) + " <" + j.html_url + "|*" + j.name + "*>\n  \u21b3 completed in " + date_diff_func(new Date(j.started_at), new Date(j.completed_at))
                 })
             }
             
@@ -146,7 +150,7 @@ jobs:
                         type: "section",
                         text: {
                             type: "mrkdwn",
-                            text: status_icon_func(workflow_status) + " *${{ github.workflow }}*" + pr + "\nWorkflow run <" + wf_run.data.html_url + "|#${{ github.run_number }}> completed in " + date_diff_func(new Date(wf_run.data.created_at), new Date(wf_run.data.updated_at))
+                            text: status_icon_func(workflow_status) + " *${{ github.workflow }}* " + pr + "\nWorkflow run <" + wf_run.data.html_url + "|#${{ github.run_number }}> completed in " + date_diff_func(new Date(wf_run.data.created_at), new Date(wf_run.data.updated_at))
                         }
                     },
                     {
