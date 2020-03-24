@@ -9,6 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Docker env
-        run:
+        run: |
           docker info
           docker ps
