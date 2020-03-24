@@ -1,0 +1,14 @@
+name: Docker
+on:
+  push:
+    branches:
+      - my-branch
+jobs:
+  run-network:
+    name: Run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker env
+        run:
+          docker env
+          docker ps
