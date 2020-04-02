@@ -93,6 +93,7 @@ jobs:
               }
               return format_func(days, "d", true) + format_func(hours, "h", true) + format_func(minutes, "m", true) + format_func(seconds, "s", false)
           }
+          
           var status_icon_func = function(s) {
               switch (s) {
               case "w_success":
