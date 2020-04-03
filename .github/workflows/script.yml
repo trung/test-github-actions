@@ -1,4 +1,4 @@
-name: Status Management using script
+name: Status Management using github-script
 on:
   push:
     tags:
