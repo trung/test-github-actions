@@ -1,10 +1,5 @@
 name: Status Management using github-script
-on:
-  push:
-    tags:
-        - 'v*'  
-    branches:
-      - master
+on: [push, pull_request]
 jobs:
   job1:
     name: Failed job
@@ -12,8 +7,8 @@ jobs:
     steps:
       - name: Step 1
         run: |
-          echo "Job failed on purpose"
-          cat foo
+          echo "Job failed on purpose to test"
+          echo "::error file=go.mod,line=3,col=1::Sample test message%0ASome other message in the new line"
   job11:
     name: Dependent job
     if: success()
