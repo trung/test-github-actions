@@ -10,6 +10,7 @@ env:
 jobs:
   job1:
     name: Some job
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       martrix:
