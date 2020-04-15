@@ -5,15 +5,19 @@ on:
         - 'v*'  
     branches:
       - master
+env:
+  TAG: ["1", "2"]
 jobs:
   job1:
-    name: Failed job
-    runs-on: ubuntu-latest
+    name: Some job
+    strategy:
+      fail-fast: false
+      martrix:
+        tag: ${{ env.TAG }}
     steps:
-      - name: Step 1
+      - name: Setup matrix
         run: |
-          echo "Job failed on purpose"
-          cat foo
+          echo "${{ matrix.tag }}"
   job11:
     name: Dependent job
     if: success()
