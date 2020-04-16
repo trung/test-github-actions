@@ -5,20 +5,26 @@ on:
         - 'v*'  
     branches:
       - master
-env:
-  TAG: x
 jobs:
   job1:
-    name: Some job
+    name: Some job ${{ matrix.tag }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        tag: ${{ env.TAG }}
+        tag:
+          - 't1'
+          - 't2'
     steps:
-      - name: Setup matrix
+      - name: Run
         run: |
-          echo "${{ matrix.tag }}"
+          mkdir -p out
+          echo "${{ matrix.tag }}" > out/${{ matrix.tag }}.txt
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          name: f-${{ matrix.tag }}
+          path: out
   job11:
     name: Dependent job
     if: success()
@@ -26,8 +32,11 @@ jobs:
       - job1
     runs-on: ubuntu-latest
     steps:
-      - name: Step 1
-        run: echo "Step 1"  
+      - name: Download
+        uses: actions/download-artifact@v2-preview
+      - name: Echo 
+        run: |
+          ls -lha */*
   job2:
     name: Job 2
     runs-on: ubuntu-latest
