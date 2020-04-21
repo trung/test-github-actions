@@ -18,13 +18,7 @@ jobs:
     steps:
       - name: Run
         run: |
-          mkdir -p out
-          echo "${{ matrix.tag }}" > out/${{ matrix.tag }}.txt
-      - name: Upload
-        uses: actions/upload-artifact@v1
-        with:
-          name: f-${{ matrix.tag }}
-          path: out
+          ssh-add -l
   job11:
     name: Dependent job
     if: success()
