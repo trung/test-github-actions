@@ -17,8 +17,13 @@ jobs:
           - 't2'
     steps:
       - name: Run
+        id: run
         run: |
-          ssh-add -l
+          foo="-Dbar.foo=xxx::yyy"
+          echo "::set-output name=foo::$foo"
+      - name: Print
+        run: |
+          echo "${{ steps.run.outputs.foo }}"
   job11:
     name: Dependent job
     if: success()
