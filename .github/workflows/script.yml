@@ -12,3 +12,6 @@ jobs:
     steps:
       - name: 'Setup jfrog CLI'
         uses: jfrog/setup-jfrog-cli@v1
+      - name: 'try to use jfrog'
+        run: |
+          jfrog --version
