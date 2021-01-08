@@ -13,4 +13,4 @@ jobs:
     steps:
       - name: 'Print Github Context'
         run: |
-          echo ${{ toJson(github) }}
+          echo '${{ toJson(github) }}'
