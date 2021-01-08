@@ -3,6 +3,7 @@
 This is an initial release
 - 1
 - 2
+- 3
 
 **3**
 
